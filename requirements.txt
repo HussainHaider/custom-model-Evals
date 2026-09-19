@@ -1,0 +1,11 @@
+# Core deps for the IPL text-to-SQL eval.
+#   db.py / schema_extractor.py / make_golden_dataset.py -> pandas (+ stdlib sqlite3)
+#   first_test.py / main.py                              -> langchain-openrouter, langchain-core, python-dotenv
+
+pandas>=2.2
+python-dotenv>=1.0
+
+# LLM access (OpenRouter via LangChain). langchain-core is pulled in by
+# langchain-openrouter, but main.py/first_test.py import it directly, so pin it here too.
+langchain-openrouter>=0.2.8
+langchain-core>=1.5.5

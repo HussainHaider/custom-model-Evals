@@ -1,0 +1,180 @@
+model,id,difficulty,correct,reason,sql
+GPT-5.6 Terra,1,hard,True,match,"SELECT SUM(total_runs) * 1.0 / COUNT(DISTINCT match_id) AS average_runs_per_match
+FROM deliveries"
+GPT-5.6 Terra,2,hard,True,match,"SELECT
+  batter,
+  100.0 * SUM(CASE WHEN batsman_runs IN (4, 6) THEN batsman_runs ELSE 0 END) / SUM(batsman_runs) AS boundary_percentage
+FROM deliveries
+GROUP BY batter
+HAVING SUM(batsman_runs) >= 500
+ORDER BY boundary_percentage DESC
+LIMIT 1"
+GPT-5.6 Terra,3,hard,True,match,"SELECT COUNT(*)
+FROM (
+  SELECT batter
+  FROM deliveries
+  GROUP BY batter
+  HAVING SUM(batsman_runs) >= 1000
+)"
+GPT-5.6 Terra,4,hard,True,match,"SELECT bowler, COUNT(*) AS ball_count
+FROM deliveries
+WHERE extras_type IS NULL
+   OR (LOWER(extras_type) NOT LIKE '%wide%' AND LOWER(extras_type) NOT LIKE '%noball%')
+GROUP BY bowler
+ORDER BY ball_count DESC
+LIMIT 1"
+GPT-5.6 Terra,5,hard,True,match,"SELECT
+  batter,
+  SUM(batsman_runs) AS runs
+FROM deliveries
+GROUP BY match_id, batter
+ORDER BY runs DESC
+LIMIT 1"
+GPT-5.6 Terra,6,hard,True,match,"WITH first_innings AS (
+  SELECT DISTINCT match_id, batting_team AS first_batting_team
+  FROM deliveries
+  WHERE inning = 1
+)
+SELECT
+  m.winner AS team,
+  COUNT(*) AS wins
+FROM matches AS m
+JOIN first_innings AS f
+  ON m.id = f.match_id
+WHERE m.winner IS NOT NULL
+  AND m.winner <> f.first_batting_team
+GROUP BY m.winner
+ORDER BY wins DESC
+LIMIT 1"
+GPT-5.6 Terra,7,hard,True,match,"SELECT SUM(total_runs) AS total_powerplay_runs
+FROM deliveries
+WHERE ""over"" BETWEEN 0 AND 5"
+GPT-5.6 Terra,8,hard,False,gen_error,
+GPT-5.6 Terra,9,brutal,False,gen_error,
+GPT-5.6 Terra,10,brutal,False,gen_error,
+GPT-5.6 Terra,11,brutal,False,gen_error,
+GPT-5.6 Terra,12,brutal,False,gen_error,
+GPT-5.6 Terra,13,brutal,False,gen_error,
+GPT-5.6 Terra,14,brutal,False,gen_error,
+GPT-5.6 Terra,15,brutal,False,gen_error,
+GPT-5.6 Terra,16,brutal,False,gen_error,
+GPT-5.6 Terra,17,brutal,False,gen_error,
+GPT-5.6 Terra,18,brutal,False,gen_error,
+GPT-5.6 Terra,19,brutal,False,gen_error,
+GPT-5.6 Terra,20,brutal,True,match,"WITH first_innings_totals AS (
+  SELECT
+    d.match_id,
+    SUM(d.total_runs) AS first_innings_total
+  FROM deliveries AS d
+  WHERE d.inning = 1
+  GROUP BY d.match_id
+),
+successful_chases AS (
+  SELECT DISTINCT m.id
+  FROM matches AS m
+  JOIN deliveries AS d
+    ON m.id = d.match_id
+  WHERE d.inning = 2
+    AND d.batting_team = m.winner
+)
+SELECT AVG(f.first_innings_total)
+FROM first_innings_totals AS f
+JOIN successful_chases AS s
+  ON f.match_id = s.id"
+Kimi K3,1,hard,False,gen_error,
+Kimi K3,2,hard,False,gen_error,
+Kimi K3,3,hard,False,gen_error,
+Kimi K3,4,hard,False,gen_error,
+Kimi K3,5,hard,False,gen_error,
+Kimi K3,6,hard,False,gen_error,
+Kimi K3,7,hard,False,gen_error,
+Kimi K3,8,hard,False,gen_error,
+Kimi K3,9,brutal,False,gen_error,
+Kimi K3,10,brutal,False,gen_error,
+Kimi K3,11,brutal,False,gen_error,
+Kimi K3,12,brutal,False,gen_error,
+Kimi K3,13,brutal,False,gen_error,
+Kimi K3,14,brutal,False,gen_error,
+Kimi K3,15,brutal,False,gen_error,
+Kimi K3,16,brutal,False,gen_error,
+Kimi K3,17,brutal,False,gen_error,
+Kimi K3,18,brutal,False,gen_error,
+Kimi K3,19,brutal,False,gen_error,
+Kimi K3,20,brutal,False,gen_error,
+Grok 4.5,1,hard,False,gen_error,
+Grok 4.5,2,hard,False,gen_error,
+Grok 4.5,3,hard,False,gen_error,
+Grok 4.5,4,hard,False,gen_error,
+Grok 4.5,5,hard,False,gen_error,
+Grok 4.5,6,hard,False,gen_error,
+Grok 4.5,7,hard,False,gen_error,
+Grok 4.5,8,hard,False,gen_error,
+Grok 4.5,9,brutal,False,gen_error,
+Grok 4.5,10,brutal,False,gen_error,
+Grok 4.5,11,brutal,False,gen_error,
+Grok 4.5,12,brutal,False,gen_error,
+Grok 4.5,13,brutal,False,gen_error,
+Grok 4.5,14,brutal,False,gen_error,
+Grok 4.5,15,brutal,False,gen_error,
+Grok 4.5,16,brutal,False,gen_error,
+Grok 4.5,17,brutal,False,gen_error,
+Grok 4.5,18,brutal,False,gen_error,
+Grok 4.5,19,brutal,False,gen_error,
+Grok 4.5,20,brutal,False,gen_error,
+Claude Sonnet 5,1,hard,False,gen_error,
+Claude Sonnet 5,2,hard,False,gen_error,
+Claude Sonnet 5,3,hard,False,gen_error,
+Claude Sonnet 5,4,hard,False,gen_error,
+Claude Sonnet 5,5,hard,False,gen_error,
+Claude Sonnet 5,6,hard,False,gen_error,
+Claude Sonnet 5,7,hard,False,gen_error,
+Claude Sonnet 5,8,hard,False,gen_error,
+Claude Sonnet 5,9,brutal,False,gen_error,
+Claude Sonnet 5,10,brutal,False,gen_error,
+Claude Sonnet 5,11,brutal,False,gen_error,
+Claude Sonnet 5,12,brutal,False,gen_error,
+Claude Sonnet 5,13,brutal,False,gen_error,
+Claude Sonnet 5,14,brutal,False,gen_error,
+Claude Sonnet 5,15,brutal,False,gen_error,
+Claude Sonnet 5,16,brutal,False,gen_error,
+Claude Sonnet 5,17,brutal,False,gen_error,
+Claude Sonnet 5,18,brutal,False,gen_error,
+Claude Sonnet 5,19,brutal,False,gen_error,
+Claude Sonnet 5,20,brutal,False,gen_error,
+MiniMax M3,1,hard,False,gen_error,
+MiniMax M3,2,hard,False,gen_error,
+MiniMax M3,3,hard,True,match,"SELECT COUNT(*) FROM (
+  SELECT batter, SUM(batsman_runs) AS total_runs
+  FROM deliveries
+  GROUP BY batter
+  HAVING SUM(batsman_runs) >= 1000
+)"
+MiniMax M3,4,hard,False,gen_error,
+MiniMax M3,5,hard,False,gen_error,
+MiniMax M3,6,hard,False,gen_error,
+MiniMax M3,7,hard,False,gen_error,
+MiniMax M3,8,hard,True,match,"SELECT batter, SUM(batsman_runs) AS total_runs
+FROM deliveries
+WHERE over BETWEEN 15 AND 19
+GROUP BY batter
+ORDER BY total_runs DESC
+LIMIT 1"
+MiniMax M3,9,brutal,False,gen_error,
+MiniMax M3,10,brutal,False,gen_error,
+MiniMax M3,11,brutal,False,gen_error,
+MiniMax M3,12,brutal,False,gen_error,
+MiniMax M3,13,brutal,False,gen_error,
+MiniMax M3,14,brutal,False,gen_error,
+MiniMax M3,15,brutal,True,match,"SELECT bowler, COUNT(*) AS wicket_count
+FROM deliveries
+WHERE over BETWEEN 15 AND 19
+  AND is_wicket = 1
+  AND dismissal_kind NOT IN ('run out', 'retired hurt', 'retired out', 'obstructing the field')
+GROUP BY bowler
+ORDER BY wicket_count DESC
+LIMIT 1"
+MiniMax M3,16,brutal,False,gen_error,
+MiniMax M3,17,brutal,False,gen_error,
+MiniMax M3,18,brutal,False,gen_error,
+MiniMax M3,19,brutal,False,gen_error,
+MiniMax M3,20,brutal,False,gen_error,
